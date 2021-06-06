@@ -20,8 +20,13 @@ def handle_input():
         elif cmd == 'status':
             manager.status()
         elif cmd == 'exit':
-            mainloop.quit()
+            exit_main()
             break
+
+
+def exit_main():
+    mainloop.quit()
+    manager.stop()
 
 
 if __name__ == '__main__':
@@ -31,5 +36,7 @@ if __name__ == '__main__':
     manager = AvrcpManager(bus)
     mainloop = GLib.MainLoop()
     threading.Thread(target=handle_input).start()
-
-    mainloop.run()
+    try:
+        mainloop.run()
+    except KeyboardInterrupt:
+        exit_main()
