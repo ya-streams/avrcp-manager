@@ -48,11 +48,7 @@ class AvrcpManager:
             print("No player detected")
 
     def assert_player(self):
-        if self.player is None:
-            print("No player detected")
-            return False
-
-        return True
+        return self.player is not None
 
     def get_player(self):
         proxy = self.bus.get_object('org.bluez', '/')
@@ -68,6 +64,9 @@ class AvrcpManager:
             self.print_player()
 
     def properties_changed(self, interface, changed, invalidated, path):
+        if not self.assert_player():
+            return
+
         if interface == "org.bluez.Device1":
             if 'Connected' in changed and not changed['Connected']:
                 if self.player.startswith(path):
